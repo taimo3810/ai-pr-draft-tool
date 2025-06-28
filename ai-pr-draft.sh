@@ -131,7 +131,7 @@ while [[ $RETRY_COUNT -lt $MAX_RETRIES ]]; do
   RETRY_COUNT=$((RETRY_COUNT + 1))
   log "  Attempt $RETRY_COUNT/$MAX_RETRIES..."
   
-  if CLAUDE_JSON=$(claude -p "$PROMPT" --output-format json 2>&1); then
+  if CLAUDE_JSON=$(claude -p "$PROMPT" --permission-mode acceptEdits --output-format json 2>&1); then
     log "  ✓ Claude responded successfully"
     break
   else
