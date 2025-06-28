@@ -325,25 +325,59 @@ fi
 # ---- Create Draft PR ---------------------------------------------------------
 log "Step 6: Creating draft PR…"
 
+# Debug: Check repository permissions first
+log "  Checking repository permissions..."
+if [[ $DEBUG -eq 1 ]] || ! gh pr create --help >/dev/null 2>&1; then
+  log "  DEBUG: Current user: $(gh api user --jq .login)"
+  log "  DEBUG: Repository permissions:"
+  gh api "repos/$REPO" --jq '.permissions // "No permissions info available"' || log "  ⚠️  Could not check repository permissions"
+fi
+
 # Save body to temporary file to avoid shell escaping issues
 TEMP_BODY=$(mktemp)
 echo "$BODY" > "$TEMP_BODY"
 
-if PR_URL=$(gh pr create \
+log "  Preparing PR creation with:"
+log "    Title: $TITLE"
+log "    Base: $DEFAULT_BRANCH"
+log "    Head: $BRANCH"
+log "    Body file: $TEMP_BODY ($(wc -c < "$TEMP_BODY") bytes)"
+
+# Attempt to create PR with detailed error capture
+log "  Executing gh pr create command..."
+PR_CREATE_OUTPUT=$(gh pr create \
   --title "$TITLE" \
   --body-file "$TEMP_BODY" \
   --base "$DEFAULT_BRANCH" \
   --head "$BRANCH" \
   --draft \
-  2>/dev/null); then
+  2>&1)
+PR_CREATE_EXIT_CODE=$?
+
+if [[ $PR_CREATE_EXIT_CODE -eq 0 ]]; then
+  PR_URL="$PR_CREATE_OUTPUT"
   log "✅ Draft PR created successfully!"
   log "   URL: $PR_URL"
   rm -f "$TEMP_BODY"
 else
-  echo "❌ Failed to create PR. Please check your permissions and try again." >&2
-  echo "Title: $TITLE" >&2
-  echo "Body preview:" >&2
+  echo "❌ Failed to create PR (exit code: $PR_CREATE_EXIT_CODE)" >&2
+  echo "Error output:" >&2
+  echo "$PR_CREATE_OUTPUT" >&2
+  echo "" >&2
+  echo "Debug information:" >&2
+  echo "  Repository: $REPO" >&2
+  echo "  Base branch: $DEFAULT_BRANCH" >&2
+  echo "  Head branch: $BRANCH" >&2
+  echo "  Title: $TITLE" >&2
+  echo "  Body preview (first 10 lines):" >&2
   echo "$BODY" | head -10 >&2
+  echo "" >&2
+  echo "Checking GitHub authentication..." >&2
+  gh auth status >&2 || echo "Authentication check failed" >&2
+  echo "" >&2
+  echo "Checking if branches exist on remote..." >&2
+  git ls-remote --heads origin "$BRANCH" >&2 || echo "Head branch not found on remote" >&2
+  git ls-remote --heads origin "$DEFAULT_BRANCH" >&2 || echo "Base branch not found on remote" >&2
   rm -f "$TEMP_BODY"
   exit 1
 fi
