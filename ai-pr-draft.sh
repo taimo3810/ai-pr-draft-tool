@@ -121,9 +121,32 @@ $TPL_CONTENT
 - 1行のJSONとして出力してください（改行を含まない）
 - 必ずコードフェンス（\`\`\`json）で囲んでください"
 
-# ---- Query Claude ------------------------------------------------------------
+# ---- Query Claude with retry logic -------------------------------------------
 log "  Sending prompt to Claude..."
-CLAUDE_JSON=$(claude -p "$PROMPT" --output-format json)
+CLAUDE_JSON=""
+MAX_RETRIES=3
+RETRY_COUNT=0
+
+while [[ $RETRY_COUNT -lt $MAX_RETRIES ]]; do
+  RETRY_COUNT=$((RETRY_COUNT + 1))
+  log "  Attempt $RETRY_COUNT/$MAX_RETRIES..."
+  
+  if CLAUDE_JSON=$(claude -p "$PROMPT" --output-format json 2>&1); then
+    log "  ✓ Claude responded successfully"
+    break
+  else
+    log "  ⚠️  Claude request failed (attempt $RETRY_COUNT/$MAX_RETRIES)"
+    if [[ $RETRY_COUNT -lt $MAX_RETRIES ]]; then
+      SLEEP_TIME=$((2 ** (RETRY_COUNT - 1)))  # Exponential backoff: 1, 2, 4 seconds
+      log "  Retrying in ${SLEEP_TIME} seconds..."
+      sleep $SLEEP_TIME
+    else
+      echo "❌ Claude request failed after $MAX_RETRIES attempts:" >&2
+      echo "$CLAUDE_JSON" >&2
+      exit 1
+    fi
+  fi
+done
 
 # Debug: Show Claude's raw output if DEBUG=1
 if [[ $DEBUG -eq 1 ]]; then
