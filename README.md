@@ -254,6 +254,25 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Uses [GitHub CLI](https://cli.github.com/) for seamless GitHub integration
 - Inspired by the need for better PR documentation in Japanese development teams
 
+## 💻 Claude Code Integration
+
+This tool includes a Claude Code command for easy execution:
+
+### Setup for Claude Code Users
+
+1. **Copy the command definition**:
+   ```bash
+   cp .claude/commands/ai-pr-draft.md /path/to/your/project/.claude/commands/
+   ```
+
+2. **Use the `/ai-pr-draft` command**:
+   ```
+   /ai-pr-draft              # Normal execution
+   /ai-pr-draft --debug      # Debug mode
+   ```
+
+The Claude Code integration provides a convenient way to execute the tool directly from your Claude Code session.
+
 ## 🔗 Related Tools
 
 - [GitHub CLI](https://cli.github.com/) - Official GitHub command line tool
