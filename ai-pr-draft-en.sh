@@ -94,6 +94,7 @@ fi
 log "Step 3: Generating PR title/body via Claude…"
 
 PROMPT="You are a senior engineer creating Conventional Commits compliant PRs in English.
+Do not execute any commands - only read the provided information.
 Analyze the git commit log and diff below, then generate a PR title and body following the provided PR template.
 
 Repository: $REPO
