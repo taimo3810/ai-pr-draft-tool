@@ -37,7 +37,7 @@
 - [ ] ユニットテスト (Unit Tests)
 - [ ] インテグレーションテスト (Integration Tests)
 - [ ] 手動テスト (Manual Testing)
-- [ ] E2Eテスト (End-to-End Tests)
+- [ ] E2E テスト (End-to-End Tests)
 
 ### テスト内容の詳細 (Test Details)
 
@@ -75,8 +75,8 @@ UIの変更がある場合は、変更前後のスクリーンショットを添
 (Describe any points you would like the reviewer to focus on or any concerns you have.)
 -->
 
-- 
-- 
+-
+-
 
 ## 完了基準の確認 (Confirmation of Completion Criteria)
 
@@ -86,11 +86,11 @@ UIの変更がある場合は、変更前後のスクリーンショットを添
 -->
 
 - [ ] **機能要件は実装されたか** (Are functional requirements implemented?)
-- [ ] **非機能要件は達成されているか** (Are non-functional requirements met?) 
+- [ ] **非機能要件は達成されているか** (Are non-functional requirements met?)
 - [ ] **適切なテストカバレッジは確保されているか** (Is appropriate test coverage ensured?)
 - [ ] **既存のテストはすべてパスしているか** (Do all existing tests pass?)
 - [ ] **ドキュメントは更新されたか (必要な場合)** (Is documentation updated if necessary?)
-- [ ] **Breaking Changeはないか** (Are there no breaking changes?)
+- [ ] **Breaking Change はないか** (Are there no breaking changes?)
 
 ## その他 (Additional Notes)
 
@@ -100,4 +100,5 @@ UIの変更がある場合は、変更前後のスクリーンショットを添
 -->
 
 ---
-*This template helps ensure comprehensive PR documentation and review.*
+
+_This template helps ensure comprehensive PR documentation and review._

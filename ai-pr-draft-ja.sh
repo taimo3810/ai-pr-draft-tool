@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 ###############################################################################
-# ai-pr-draft.sh
+# ai-pr-draft-ja.sh
 #   Claude を使用してPRタイトル/本文を生成し、gh CLIでドラフトPRを作成します。
 #   - 保護ブランチ (main, develop, staging) では中止します。
 #   - 各ステップをログ出力; DEBUG=1 でシェルトレースを有効化。
@@ -58,7 +58,7 @@ log "  コミットを収集しました"
 log "  差分の長さ: $(echo "$DIFF_RAW" | wc -l) 行 (切り詰め済み)"
 
 # ---- プルリクエストテンプレート -----------------------------------------------
-TPL_PATH=.github/PULL_REQUEST_TEMPLATE.md
+TPL_PATH=.github/PULL_REQUEST_TEMPLATE_JA.md
 if [[ -f "$TPL_PATH" ]]; then
   log "  テンプレートが見つかりました: $TPL_PATH"
   TPL_CONTENT=$(cat "$TPL_PATH")
@@ -138,8 +138,8 @@ while [[ $RETRY_COUNT -lt $MAX_RETRIES ]]; do
   else
     log "  ⚠️  Claude リクエストが失敗しました (試行 $RETRY_COUNT/$MAX_RETRIES)"
     if [[ $RETRY_COUNT -lt $MAX_RETRIES ]]; then
-              SLEEP_TIME=$((2 ** (RETRY_COUNT - 1)))  # 指数バックオフ: 1, 2, 4 秒
-        log "  ${SLEEP_TIME} 秒後に再試行します..."
+      SLEEP_TIME=$((2 ** (RETRY_COUNT - 1)))  # 指数バックオフ: 1, 2, 4 秒
+      log "  ${SLEEP_TIME} 秒後に再試行します..."
       sleep $SLEEP_TIME
     else
       echo "❌ $MAX_RETRIES 回の試行後、Claude リクエストが失敗しました:" >&2
@@ -406,4 +406,4 @@ else
   exit 1
 fi
 
-log "🎉 処理が正常に完了しました！"
+log "🎉 処理が正常に完了しました！" 
